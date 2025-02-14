@@ -22,11 +22,25 @@ public:
 
     void push(T value) {
         if (top >= static_cast<int>(capacity) - 1) {
-            std::cerr << "Stack overflow: Cannot push " << value << " (stack is full)\n";
-            return;
+            // Resize: Double the capacity
+            uint32_t newCapacity = capacity * 2;
+            T* newData = new T[newCapacity];
+    
+            // Copy old data
+            for (uint32_t i = 0; i < capacity; i++) {
+                newData[i] = data[i];
+            }
+    
+            delete[] data;  // Free old memory
+            data = newData;
+            capacity = newCapacity;
+            
+            std::cout << "Stack resized to " << capacity << " elements\n";
         }
+    
         data[++top] = value;
     }
+    
 
     T pop() {
         if (top < 0) {
