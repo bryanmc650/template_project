@@ -28,7 +28,7 @@ public:
     
             // Copy old data
             for (uint32_t i = 0; i < capacity; i++) {
-                newData[i] = data[i];
+                newData[i] = std::move(data[i]);
             }
     
             delete[] data;  // Free old memory
@@ -44,11 +44,11 @@ public:
 
     T pop() {
         if (top < 0) {
-            std::cerr << "Stack underflow: Cannot pop from an empty stack\n";
-            return T();  // Return default-constructed object
+            throw std::runtime_error("Stack underflow: Cannot pop from an empty stack");
         }
         return data[top--];
     }
+    
 
     T peek() const {
         if (top < 0) {
@@ -57,6 +57,12 @@ public:
         }
         return data[top];
     }
+
+    void reverse() {
+        for (int i = 0; i <= top / 2; i++) {
+            std::swap(data[i], data[top - i]);
+        }
+    }  
 
     uint32_t size() const {
         return static_cast<uint32_t>(top + 1);
