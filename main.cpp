@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include "stack.hpp"
 
 struct TestObject {
@@ -90,6 +91,42 @@ int main() {
     while (!objStack.isEmpty()) {
         TestObject obj = objStack.pop();
         std::cout << "Popped object with id: " << obj.id << "\n";
+    }
+
+    //--------------------------------------------------------------//
+    std::cout << "\n==============================\n";
+    std::cout << "\nCreating a stack of std::vector<int>...\n";
+    Stack<std::vector<int>> vecStack(2);
+
+    std::vector<int> v1 = {1, 2, 3};
+    std::vector<int> v2 = {4, 5, 6};
+
+    std::cout << "\nPushing vectors onto the stack...\n";
+    vecStack.push(v1);             // Copy v1
+    vecStack.push(std::move(v2));  // Move v2 (v2 is now empty)
+
+    std::cout << "\nPopping vectors from the stack...\n";
+    std::vector<int> poppedVec = vecStack.pop();  // Moves from stack to poppedVec
+
+    std::cout << "Popped vector contains: ";
+    for (int num : poppedVec) std::cout << num << " ";
+    std::cout << std::endl;
+
+    std::cout << "\nPeeking at the remaining vector in the stack...\n";
+    std::vector<int> peekedVec = vecStack.peek();  // Peeking (not popping)
+    
+    std::cout << "Peeked vector contains: ";
+    for (int num : peekedVec) std::cout << num << " ";
+    std::cout << std::endl;
+
+    std::cout << "\nPopping last vector...\n";
+    vecStack.pop();  // Moves the remaining vector out
+
+    std::cout << "\nAttempting to pop from an empty stack (should throw an exception)...\n";
+    try {
+        vecStack.pop();  // This should throw an exception
+    } catch (const std::exception& e) {
+        std::cerr << "Exception caught: " << e.what() << "\n";
     }
 
     return 0;
